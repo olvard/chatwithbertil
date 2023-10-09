@@ -1,11 +1,11 @@
-<script lang="ts">
+<script>
 	export let role = ''
 	export let message = ''
 </script>
 
 <li>
 	<div>
-		<p>{name}</p>
+		<p>{role}</p>
 		<p>{message}</p>
 	</div>
 </li>
