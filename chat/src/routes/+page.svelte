@@ -16,35 +16,25 @@
 			content: inputMessage,
 		}
 
-		// Generate a unique ID for the user message
-		userMessage.id = Date.now() + Math.random().toString(36).substring(7)
-
-		// Display user's message immediately
-		messages = [...messages, userMessage]
-		inputMessage = ''
-		isWaitingForResponse = true
-
 		const response = await fetch('/api/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				isInitializing: messages.length === 1,
+				isInitializing: messages.length === 0,
 				priorMessages: messages,
 				message: inputMessage,
 			}),
 		}).then((res) => res.json())
 
-		// Generate unique IDs for the response messages
-		response.forEach((message) => {
-			message.id = Date.now() + Math.random().toString(36).substring(7)
-		})
+		if (inputMessage) {
+			messages = messages.concat([userMessage])
+		}
 
-		// Display the response when it arrives
-		messages = [...messages, ...response]
-		isWaitingForResponse = false
-		console.log(response)
+		messages = messages.concat(response)
+		inputMessage = ''
+
 		return response
 	}
 </script>
@@ -52,16 +42,8 @@
 <div class="container">
 	<div class="messages">
 		{#if messages.length > 0}
-			{#each messages as message (message.id)}
-				{#if message.role === 'user'}
-					<div class="user-bubble">
-						<ChatMessage role={message.role} message={message.content} />
-					</div>
-				{:else}
-					<div class="response-bubble">
-						<ChatMessage role={message.role} message={message.content} />
-					</div>
-				{/if}
+			{#each messages as message}
+				<ChatMessage role={message.role} message={message.content} />
 			{/each}
 		{/if}
 	</div>
