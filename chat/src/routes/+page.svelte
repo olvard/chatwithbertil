@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
 	import { onMount } from 'svelte'
 	import ChatMessage from './chat-message.svelte'
 
@@ -37,6 +37,54 @@
 
 		return response
 	}
+</script> -->
+
+<script>
+	import { onMount } from 'svelte'
+	import ChatMessage from './chat-message.svelte'
+
+	let messages = []
+	let inputMessage = ''
+	let isWaitingForResponse = false
+
+	const handleUserMessage = () => {
+		const userMessage = {
+			role: 'user',
+			content: inputMessage,
+		}
+
+		if (inputMessage) {
+			messages = messages.concat([userMessage])
+			inputMessage = '' // Clear the input field
+
+			// Now, you can optionally send the message to the server if needed
+			// You can send it in the background or display a sending indicator
+			// and update the message after getting a response from the server.
+			handleChatCompletion()
+		}
+	}
+
+	const handleChatCompletion = async () => {
+		const response = await fetch('/api/', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				isInitializing: messages.length === 0,
+				priorMessages: messages,
+				message: inputMessage,
+			}),
+		}).then((res) => res.json())
+
+		// Add the server response to the messages array
+		messages = messages.concat(response)
+	}
+
+	// You can call handleChatCompletion when the component mounts if needed
+	// onMount(async () => {
+	//   await handleChatCompletion()
+	// })
 </script>
 
 <div class="container">
@@ -48,10 +96,10 @@
 		{/if}
 	</div>
 
-	<form class="inputbox" on:submit={handleChatCompletion}>
+	<form class="inputbox" on:submit={handleUserMessage}>
 		<div>
 			<input bind:value={inputMessage} type="text" name="search" id="search" />
-			<button type="submit" disabled={isWaitingForResponse}>
+			<button type="submit">
 				<kbd>Enter</kbd>
 			</button>
 		</div>
@@ -75,33 +123,8 @@
 		font-family: monospace;
 		font-size: 20px;
 		width: 50vw;
-	}
-
-	/* Style user chat bubble to the right */
-	.user-bubble {
-		display: flex;
-		justify-content: flex-end;
-		width: 50%;
-		background-color: #007aff; /* Set user bubble background color */
-		color: white; /* Set text color */
-		border-radius: 10px;
-		padding: 10px;
-	}
-
-	/* Style response chat bubble to the left */
-	.response-bubble {
-		display: flex;
-		justify-content: flex-start;
-		width: 70%;
-		background-color: #f0f0f0; /* Set response bubble background color */
-		border-radius: 10px;
-		padding: 10px;
-	}
-
-	/* Style chat bubbles */
-	.user-bubble,
-	.response-bubble {
-		margin: 5px; /* Add margin for spacing between bubbles */
+		height: 70vh;
+		overflow: scroll;
 	}
 
 	.inputbox {
