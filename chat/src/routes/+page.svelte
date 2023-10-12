@@ -175,4 +175,23 @@
 		background-color: rgb(242, 197, 120);
 		border: none;
 	}
+
+	@media (max-width: 768px) {
+		.container {
+			padding: 10px; /* Add some padding for better spacing on small screens */
+		}
+
+		.messages {
+			width: 90vw; /* Adjust the width for smaller screens */
+		}
+
+		.inputbox {
+			padding: 10px; /* Add some padding for better spacing on small screens */
+			width: 300px;
+		}
+
+		input[type='text'] {
+			width: 100%; /* Make the input field full width on small screens */
+		}
+	}
 </style>
