@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { OPENAI_API_KEY } from '$env/dynamic/private'
+import { OPENAI_API_KEY } from '$env/static/private'
 
 export const POST = async (event) => {
   const requestBody = await event.request.json();
