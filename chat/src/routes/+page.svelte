@@ -97,10 +97,16 @@
 
 	<form class="inputbox" on:submit={handleUserMessage}>
 		<div>
-			<input bind:value={inputMessage} type="text" name="search" id="search" />
-			<button class="enter" type="submit">
+			<input
+				bind:value={inputMessage}
+				placeholder="Fråga bävern något här..."
+				type="text"
+				name="search"
+				id="search"
+			/>
+			<!-- <button class="enter" type="submit">
 				<kbd>Skicka</kbd>
-			</button>
+			</button> -->
 		</div>
 	</form>
 </div>
